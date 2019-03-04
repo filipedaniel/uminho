@@ -19,30 +19,16 @@ If you're a Software Engineering student, the projects will *probably* help you,
 
 * **1st year**
 
-  * Software Labs I - 
-
-  * Software Labs II - 
+  * [Software Labs I](https://github.com/filipedaniel/uminho/tree/master/01/software-labs-1) - OlxUm Haskell project!
 
 * **2nd year**
 
-  * Software Labs III - 
+  * [Software Labs III](https://github.com/filipedaniel/uminho/tree/master/01/software-labs-1) - Hypermarket project in C and Java!
 
-  * Object Oriented Programming - 
-
-  * Operating Systems - ???
+  * [Object Oriented Programming](https://github.com/filipedaniel/uminho/tree/master/02/object-oriented-programing) - FitnessUM Java project!
 
 * **3nd year**
 
-  * Databases - ??
+  * [Language Processing](https://github.com/filipedaniel/uminho/tree/master/03/language-processing) - Project using Flex to convert lyr in pdf files. The secound is small language that runs on a stack-based VM!
 
-  * Software Systems Development - ??
-
-  * Distributed Systems - ??
-
-  * Computer Communications - ??
-
-  * Computer Graphics - ??
-
-  * Language Processing - ??
-
-  * Knowledge and Reasoning Representation Systems - ??
+  * [Knowledge and Reasoning Representation Systems](https://github.com/filipedaniel/uminho/tree/master/03/knowledge-and-reasoning-representation-systems) - A set of projects using Prolog to represent knowledge and neural networks!
