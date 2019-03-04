@@ -1,10 +1,7 @@
 # UMinho
 
-:mortar_board: My Computer Engineering projects at University of Minho.
 
---
-
-So, in deed, I got a university degree :mortar_board:, at [University of Minho](https://www.uminho.pt/EN/).
+So, I got a university degree :mortar_board:, at [University of Minho](https://www.uminho.pt/EN/).
 
 ![uminho](http://www4.di.uminho.pt/~jmf/IMAGES/um_eeng.gif)
 
