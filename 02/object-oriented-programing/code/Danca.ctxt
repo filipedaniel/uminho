@@ -1,0 +1,24 @@
+#BlueJ class context
+comment0.params=
+comment0.target=Danca()
+comment0.text=\n\ Construtor\ vazio\n
+comment1.params=id\ dat\ dur\ e
+comment1.target=Danca(int,\ Data,\ double,\ java.lang.String)
+comment1.text=\n\ Construtor\ parametrizado\n
+comment2.params=o
+comment2.target=Danca(Danca)
+comment2.text=\n\ Construtor\ por\ c\u00E1pia\n
+comment3.params=
+comment3.target=java.lang.String\ getEstilo()
+comment4.params=e
+comment4.target=void\ setEstilo(java.lang.String)
+comment5.params=
+comment5.target=double\ calorias()
+comment5.text=\n\ Devolve\ as\ calorias\ quimadas\ nesta\ actividade\n
+comment6.params=
+comment6.target=java.lang.String\ toString()
+comment7.params=
+comment7.target=Danca\ clone()
+comment8.params=o
+comment8.target=boolean\ equals(java.lang.Object)
+numComments=9

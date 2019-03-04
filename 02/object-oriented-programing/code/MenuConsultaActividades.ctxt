@@ -1,0 +1,14 @@
+#BlueJ class context
+comment0.params=
+comment0.target=MenuConsultaActividades()
+comment1.params=
+comment1.target=java.lang.String\ toString()
+comment2.params=
+comment2.target=void\ printmenuActi()
+comment3.params=lista
+comment3.target=int\ execOpcao(Actividades)
+comment4.params=
+comment4.target=java.lang.String\ getNomeAct()
+comment5.params=str
+comment5.target=java.lang.String\ removerAcentos(java.lang.String)
+numComments=6

@@ -1,0 +1,18 @@
+#BlueJ class context
+comment0.params=
+comment0.target=MenuUtilizador()
+comment1.params=
+comment1.target=java.lang.String\ toString()
+comment2.params=
+comment2.target=void\ printMenuUtilizador()
+comment3.params=user\ list
+comment3.target=void\ execOpcao(Utilizador,\ Utilizadores)
+comment4.params=
+comment4.target=java.lang.String\ getEmailAmig()
+comment5.params=
+comment5.target=Amigo\ novoAmigo()
+comment6.params=u
+comment6.target=Utilizador\ dadosRegisto(Utilizador)
+comment7.params=
+comment7.target=double\ leDouble()
+numComments=8

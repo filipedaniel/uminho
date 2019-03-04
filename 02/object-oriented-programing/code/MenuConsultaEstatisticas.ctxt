@@ -1,0 +1,14 @@
+#BlueJ class context
+comment0.params=
+comment0.target=MenuConsultaEstatisticas()
+comment1.params=
+comment1.target=java.lang.String\ toString()
+comment2.params=
+comment2.target=void\ printmenuEst()
+comment3.params=lista
+comment3.target=int\ execOpcao(Actividades)
+comment4.params=
+comment4.target=int\ getAno()
+comment5.params=
+comment5.target=int\ leInteiro()
+numComments=6

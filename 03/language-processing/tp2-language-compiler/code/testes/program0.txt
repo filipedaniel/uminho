@@ -1,0 +1,11 @@
+program prog1;
+var a,b=1,c,d[10];
+begin
+	a=b*(75/(6-2));
+	d[5] = a;
+	if(a>1){
+		c=a/b;
+	} else {
+		c=0;
+	}
+end

@@ -1,0 +1,15 @@
+program prog2;
+var a;
+
+begin
+	a=0;
+	if(a==0){
+		while(a<10){
+			!"Teste!";
+			a= a + 1;
+		}
+	}
+	else{
+		!"ElseTeste!";
+	}
+end

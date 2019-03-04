@@ -1,0 +1,20 @@
+#BlueJ class context
+comment0.params=
+comment0.target=CardioFitness()
+comment0.text=\n\ Construtor\ vazio\n
+comment1.params=id\ dat\ dur
+comment1.target=CardioFitness(int,\ Data,\ double)
+comment1.text=\n\ Construtor\ parametrizado\n
+comment2.params=o
+comment2.target=CardioFitness(CardioFitness)
+comment2.text=\n\ Construtor\ por\ c\u00E1pia\n
+comment3.params=
+comment3.target=double\ calorias()
+comment3.text=\n\ Devolve\ as\ calorias\ quimadas\ nesta\ actividade\n
+comment4.params=
+comment4.target=java.lang.String\ toString()
+comment5.params=
+comment5.target=CardioFitness\ clone()
+comment6.params=o
+comment6.target=boolean\ equals(java.lang.Object)
+numComments=7

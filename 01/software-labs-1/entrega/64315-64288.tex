@@ -1,0 +1,493 @@
+\documentclass[a4paper]{article}
+\usepackage{a4}
+\usepackage{moreverb}
+\usepackage{palatino}
+\usepackage[utf8x]{inputenc}
+\usepackage[portuges]{babel}
+\newcommand{\OlxUm}{{O\hskip-.05ex\raisebox{-.4em}L\hskip-0.8ex X\raisebox{.4em}{{\footnotesize\sc um}}}}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.jpg}
+\graphicspath{{./imagens/}}
+\usepackage{verbatim}
+%----------------------------------------------------------------------------
+\title{Relatório do Projecto de Laboratórios de Informática I (2012/2013)}
+
+\author{
+\\
+	64315 - Filipe Ribeiro
+\\
+	64288 - Nelson Gomes
+}
+
+\date{Jan.\ 2012}
+%------------------------------------------------------------------
+\begin{document}
+\begin{figure}
+\begin{center}
+\includegraphics[]{UM.jpg}
+\end{center}
+\end{figure}
+\maketitle
+\newpage
+%------------------------------------------------------------------
+%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+\begin{abstract}
+Este relatório descreve as varias etapas pedidas no âmbito deste mesmo projeto. Serão demonstradas e explicadas oito das nove pedidas. Cada etapa esta dividida em varias partes, o que e pertendido que a função faça, o tipo, funções auxiliares, código Haskell e a análise ao cógido.
+\end{abstract}
+%------------------------------------------------------------------
+\section{Programação}
+\begin{enumerate}
+\item 
+Implementar a função $idsOk :: House -> Bool$ que verificar que não há identificadores repetidos (nas duas listas).
+\begin{itemize}
+\item {Tipo de dados:}
+\begin{verbatim}
+      idsOk :: House -> Bool
+\end{verbatim}
+\paragraph{}O objetivo e ao receber um $House$ teste ($Bool$) se de todos os identificadores existem repetidos.
+\item {Codigo Haskell:}
+\begin{verbatim}
+idsOk :: House -> Bool
+idsOk h = let l = hrunning h ++ hfinished h
+              m = nub(map actid l)
+          in  length m == length l
+\end{verbatim}
+\item {Análise do código:}
+\paragraph{}O $let$ cria duas variáveis, $l$ e $m$, a primeira cria uma lista com os artigos que estão no $hrunning$ $h$, e no $hfinished$ $h$. A segunda, utiliza duas funções predefinidas do Haskell $nub$\footnote{nub :: $Eq$ $a => [a] -> [a]$} e $map$\footnote{map :: $(a -> b) -> [a] -> [b]$}.
+\begin{verbatim}
+      ... (map actid l)
+\end{verbatim}
+\paragraph{}O $map$ cria uma lista de todos os $actid$ pertencentes há lista $l$, que se construiu antes. 
+\begin{verbatim}
+      ... m = nub(map actid l)
+\end{verbatim}
+\paragraph{}O $nub$ tem um papel importante, ao receber a lista vinda do $map$, constroi outa lista com os números pertencentes há lista que recebe, e se existir repetidos exclui esses mesmos. Logo a comparação final, 
+\begin{verbatim}
+      ... in  length m == length l
+\end{verbatim}
+como mostra no código, se o comprimento de $l$ (lista original), for igual ao comprimento da lista $m$ (não existir identificadores repetidos) a função toma o valor lógico $True$ e se não for o caso, $False$.
+\end{itemize}
+
+%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+\newpage
+\item
+Acrescentar a funcão $idKey :: House -> Bool$ que verifica se o identificador $actid$ de um dado item o identifica univocamente.
+\begin{itemize}
+\item {Tipo de dados:}
+\begin{verbatim}
+      idKey :: House -> Bool
+\end{verbatim}
+\paragraph{}O objetivo é, ao receber um $House$ teste ($Bool$) se o identificador de um dado item o identifica univocamente.
+
+\item {Código Haskell:}
+\begin{verbatim}
+idKey :: House -> Bool
+idKey h = let l = hrunning h ++ hfinished h
+              m = idsOk h      
+          in if (m == False) then verifica l else True
+
+verifica :: [Auction] -> Bool
+verifica [] = True
+verifica (h:t) | ajuda h (h:t) = verifica t
+               | otherwise = False
+
+ajuda :: Auction -> [Auction] -> Bool
+ajuda _ [x] = True
+ajuda a t = let b = nub(filter((==actid a).actid) t)
+            in length b == 1
+\end{verbatim}
+\item {Análise do código:}
+\paragraph{}Nesta função também o $let$ cria duas variaveis $l$ e $m$, o $l$ é novamente uma lista com os artigos que estão no $hrunning$ $h$, e os que estão no $hfinished$ $h$, mas $m$ chama a função anterior, $idsOk$, visto que se $idsOk$ toma o valor lógico de $True$, que diz que não ha identificadores repetidos, a função que estamos a analisar toma também o valor de $True$ e termina.
+\paragraph{}Caso a função $idsOk$ toma o valor lógico $False$ a função em estudo chama uma outra função, uma função auxiliar: 
+\begin {verbatim}
+verifica :: [Auction] -> Bool
+verifica [] = True
+verifica (h:t) | ajuda h (h:t) = verifica t
+               | otherwise = False
+\end {verbatim}
+\paragraph{} Esta função ao receber uma lista de $Auction$ vai comparar recursivamente o identificador de cada item com o do resto dos itens e verifica se existe outro igual, para isso recorre a outra função:
+\begin {verbatim}
+ajuda :: Auction -> [Auction] -> Bool
+ajuda _ [x] = True
+ajuda a t = let b = nub(filter((==actid a).actid) t)
+            in length b == 1
+\end {verbatim}
+\paragraph{}Esta função auxiliar tém um papel simples mas importante, dado um $Auction$ e $[Auction]$ testa se existe algum identificador igual ao do $Auction$ na $[Auction]$, na sua execução cria uma variavel, $b$, que utiliza duas funções já existentes no Haskell, $nub$ e $filter$\footnote{filter :: $(a -> Bool) -> [a] -> [a]$} o resultado da aplicação desta ultima função, 
+\begin {verbatim}
+       ... (filter((==actid a).actid) t)     
+\end {verbatim}
+cria uma lista, que indo aos $actid$ de $t$, seleciona os que são iguais ao $actid$ de $a$, depois com o $nub$, se o comprimento da lista dada for um, significa que so existe um, o proprio $actid$ $a$, podendo-se deduzir que de facto não existe identificadores repetidos, tomando a função $ajuda$ o valor de $True$.
+\paragraph{}Voltando há função $verifica$, se o resultado da função $ajuda$ for $True$ volta a fazer o mesmo procedimento mas desta vez aplicado só há cauda da lista.
+\begin {verbatim}
+       ... | ajuda h (h:t) = verifica t
+\end {verbatim}
+\paragraph{}Caso contrário o resultado da função $verifica$ é $False$, o que quer dizer que existe um identificador de um dado item que não o identifica univocamente, tomando também a função principal o valor de $False$.
+\end{itemize}
+
+%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+\item
+Será que $idKey$ implica $idsOk$? Ou será que $idsOk$ é que implica $idKey$?
+      Ou nenhuma dessas implicações se verifica? Justifique a sua resposta.
+\paragraph{}Na nossa opinião $idKey$ implica $idsOk$ pelo facto de, sabendo que $idsOk$ toma o valor lógico $Tru$e então $idKey$ toma de imediato o mesmo valor de $True$ e sendo o contrario, havendo $actid$ repetidos é que $idKey$ faz a sua verificação.
+
+%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+\item
+Acrescentar o predicado $allIds :: House -> Bool$ que verifica se a alocação de identificadores a leilões é sequencial.
+\begin{itemize}
+\item {Tipo de dados:}
+\begin{verbatim}
+      allIds :: House -> Bool
+\end{verbatim}
+\paragraph{}O objetivo e ao receber um $House$, teste ($Bool$) se os identificadorres de um leilão estao de forma sequencial, quer seja crescente quer decrescente.
+\newpage
+\item {Código Haskell:}
+\begin{verbatim}
+allIds :: House -> Bool
+allIds h = 
+  let (a,b)=((map actid (hrunning h)),(map actid (hfinished h)))
+  in (abOk a b)
+
+abOk :: [Int] -> [Int] -> Bool
+abOk x y = let m = f x
+               n = g x
+               m1 = f y
+               n1 = g y
+           in (m || n) && (m1 || n1)
+
+f :: [Int] -> Bool 
+f [] = True
+f [x] = True 
+f (h:x:xs) = (h>=x)&&(f (x:xs))
+g :: [Int] -> Bool
+g [] = True
+g [x] = True 
+g (h:x:xs) = (h<=x)&&(g (x:xs))
+\end{verbatim}
+
+\item {Análise do código:}
+\paragraph{}A função principal,
+\begin{verbatim}
+allIds :: House -> Bool
+allIds h = 
+  let (a,b)=((map actid (hrunning h)),(map actid (hfinished h)))
+  in (abOk a b)
+\end{verbatim}
+constroi duas variáveis, crindo o par, $(a,b)$, a primeira, usando o $map$ cria uma lista com todos os $actid$ pertencentes ao $hrunning$ $h$, enquanto a segunda, cria também uma lista de $actid$, mas desta vez pertencentes ao $hfinished$ $h$.
+\paragraph{}Depois de criada as variáveis, a função chama uma função auxiliar $abOk$,
+\begin{verbatim}
+abOk :: [Int] -> [Int] -> Bool
+abOk x y = let m = f x
+               n = g x
+               m1 = f y
+               n1 = g y
+           in (m || n) && (m1 || n1)
+\end{verbatim}
+esta função, verifica se tanto os $actid$ de $a$ e $b$ estão de alguma forma ordenados. Em comparação com a função principal, esta também utiliza outras funções auxiliares: \\
+\newline
+\begin{tabular}{l l}
+$f :: [Int] -> Bool$ & $g :: [Int] -> Bool$\\
+$f [] = True$ & $g [] = True$\\
+$f [x] = True$ & $g [x] = True$\\ 
+$f (h:x:xs) = (h>=x)\&\&(f (x:xs))$ & $g (h:x:xs) = (h<=x)\&\&(g (x:xs))$\\
+\end{tabular}
+\newpage
+\paragraph{}Estas duas funções tem um papel minucioso, a função $f$ verifica se a lista que recebe é decrescente e a $g$ se é crescente. Guardando os valores dos testes de cada uma das listas em quatro variaveis, $m$, $n$, $m1$, $n1$. 
+\paragraph{}Voltanto há função principal, a operação final, 
+\begin{verbatim}
+      ... (m || n) && (m1 || n1)
+\end{verbatim}
+sendo que as listas só precisão de estar ordenadas de uma das formas, dai a condição $(||)$, mas independentemente da ordenação, precisão de estar ordenadas, dai a condição $(\&\&)$.\\
+\end{itemize}
+
+%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+\item
+É fácil de ver, exercitando \OlxUm, que a função $auctionBid$ não está implementada convenientemente, pois:
+\begin{itemize}
+\item	após fazer \textsf{Reset}, se licitar o item 1 por 61 euros e depois por 1 (um) euro,
+	verá que o sistema aceita qualquer oferta, mesmo que seja inferior à melhor oferta
+	até ao momento, violando o princípio do \emph{quem dá
+	mais ganha} inerente a qualquer leilão;
+\item	se licitar um item que não existe, por exemplo o item 99, o sistema
+	dá erro.
+\end{itemize}
+Reescreva a função por forma a nenhuma das anomalias identificadas acima se verificar.
+
+\begin{itemize}
+\item{Versão melhorada: Tipo de dados:}
+\begin{verbatim}
+     auctionBid :: House -> Int -> String -> Int -> House
+\end{verbatim}
+\paragraph{}O objectivo e aumentar o rigor do leilão, ao receber um $House$, o identificador do item, o nome de quem esta a tentar comprar e o valor que oferece pelo produto. 
+\item{Versão melhorada: Codigo Haskell:}
+\end{itemize}
+\begin{verbatim}
+auctionBid :: House -> Int -> String -> Int -> House
+auctionBid h id bidder bid =  
+ let curr = (filter ((==id).actid) (hrunning h))
+ in if (curr == []) then error "Item não existente" else 
+        if (podee curr bid) then (add h curr id bidder bid) 
+              else error "Existe um valor de licitação superior"
+
+podee :: [Auction] -> Int -> Bool
+podee h i = let l = head(h)
+            in i > (actvalue l) 
+
+add :: House -> [Auction] -> Int -> String -> Int -> House
+add h curr id bidder bid = 
+  let r = filter ((/=id).actid) (hrunning h)
+      cur = head(curr)
+      newa = Auction (actid cur) (actowner cur) (actdesc cur) 
+                     (actclass cur) (actvalinc cur) bid bidder
+  in House (newa:r) (hfinished h)
+\end{verbatim}
+\newpage
+\begin{itemize}
+\item{Análise do código:}
+\end{itemize}
+\paragraph{}A grade diferença entre a versão antiga e a melhorada, é como foi referido, a rigor do leilão, dando avisos a quem esta a participar no leilão. Existem dois avisos possiveis,
+\begin{verbatim}
+      ... error "Item não existente" else 
+            ... 
+              ... error "Existe um valor de licitação superior"
+\end{verbatim}
+o primeiro, e quando o utilizador pertende adquirir um item, colocando um identificador inixestente, o segundo e quando o valor oferecido pelo item e inferior a um já oferecido.\\
+\paragraph{}A primeira tarefa que a função $auctionBid$ faz e criar uma variavel, $curr$, usando o $filter$, cria uma lista de $Auction$, pertencentes ao $hrunning$ $h$, com os que tenham $actid$ iduais ao $id$ dado, e faz logo de seguida o teste, se a lista for vazia, que significa que não ha identificadores iguais, aparece o primeiro erro. Se não for esse o caso faz a verificação sobre o valor da licitação, chamando a função auxiliar:
+\begin{verbatim}
+      podee :: [Auction] -> Int -> Bool
+      podee h i = let l = head(h)
+                  in i > (actvalue l) 
+\end{verbatim}
+\paragraph{}Esta função testa se o valor oferecido e superior ao valor já anteriormente oferecido pelo item, a utilização do $head$, apesar de a lista $h$ ter normalmete um elemento, é para ter selecionado um elemento e não uma lista, para facilitar o teste seguinte.
+\begin{verbatim}
+      ... in i > (actvalue l) 
+\end{verbatim} 
+\paragraph{}Esta compara o valor a que o utilizador está a oferecer pelo item com o valor já existente de licitações anteriores, se for não for maior aparece o segundo erro.
+\paragraph{}Se tiver passado por estes dois testes, é precisso registar o licitação, chamando assim outra função,
+\begin{verbatim}
+add :: House -> [Auction] -> Int -> String -> Int -> House
+add h curr id bidder bid = 
+ let r = filter ((/=id).actid) (hrunning h)
+     cur = head(curr)
+     newa = Auction (actid cur) (actowner cur) (actdesc cur) 
+                    (actclass cur) (actvalinc cur) bid bidder
+ in House (newa:r) (hfinished h)
+\end{verbatim}
+\newpage
+\paragraph{}Esta função ao receber todos os dados de uma licitação, regista-os no $House$ que recebe. Cria a variavel $r$, que indo aos $actid$ dos $Auction$ que recebe da lista $hrunning$ $h$ cria uma lista dos $Auction$ cujo $actid$ sejam diferentes do $id$ dado na função. Cria também o $cur$ que é o item que o utilizador  esta a licitar, e cria um novo $Auction$ com os dados iguais ao do $cur$ juntando o valor licitado e o nome do comprador. Juntando no final toda a imformação no $House$, e junta a lista $hfinished$ $h$.
+
+%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+\item Supondo que o formato interno $House$ muda para
+\begin{verbatim}
+data NHouse = NHouse { tot :: [ NAuction ] } deriving (Show,Eq)
+\end{verbatim}
+onde
+\begin{verbatim}
+data NAuction = NAuction { a :: Auction, st:: Status } 
+                                               deriving (Show,Eq)
+
+data Status = Running | Finished deriving (Eq,Show)
+\end{verbatim}
+escrever funções de conversão entre os dois formatos,
+
+\begin{itemize}
+\item $toNHouse :: House -> NHouse$
+\item[-]{Código Haskell:}
+\end{itemize}
+\begin{verbatim}
+toNHouse :: House -> NHouse
+toNHouse h = let a = (addd (hrunning h) (Running))
+                 b = (addd2 (hfinished h) (Finished))
+             in NHouse (a ++ b)
+
+addd :: [Auction] -> Status -> [NAuction]
+addd [] _ = []
+addd (h:t) a = NAuction (h) (Running) : addd t a
+
+addd2 :: [Auction] -> Status -> [NAuction]
+addd2 [] _ = []
+addd2 (h:t) a = NAuction (h) (Finished) : addd2 t a
+\end{verbatim}
+\begin{itemize}
+\item[-]{Análise do código:}
+\end{itemize}
+\paragraph{}O $NHouse$ é uma lista composta por $Auction$, e por $Status$, este que define o estado do item, $Running$ ou $Finished$.
+\paragraph{}A função $toNHouse$ primeiro cria duas variáveis, que são as listas $a$ e $b$, a primeira usando a função auxiliar $addd$.
+\begin{verbatim}
+addd :: [Auction] -> Status -> [NAuction]
+addd [] _ = []
+addd (h:t) a = NAuction (h) (Running) : addd t a
+\end{verbatim}
+\paragraph{}Esta função ao receber uma lista de $Auction$ e o estado, cria uma lista de $NAuction$ com cada item da lista $h$ e com o estado, neste caso $Running$.
+\paragraph{}A variavel $b$ usa a função auxiliar $addd2$ que que é muito parecida com a $addd$, com a diferença que recebe o estado como $Finished$.
+\begin{verbatim}
+addd2 :: [Auction] -> Status -> [NAuction]
+addd2 [] _ = []
+addd2 (h:t) a = NAuction (h) (Finished) : addd2 t a
+\end{verbatim}
+\paragraph{}Por fim, a função principal ao receber as duas listas, junta-as criando um $NHouse$.
+\begin{verbatim}
+      ... in NHouse (a ++ b)
+\end{verbatim}
+%----------------------------------------------------------------------------------------
+\begin{itemize}
+\item $toHouse :: NHouse -> House$
+\item[-]{Código Haskell:}
+\end{itemize}
+\begin{verbatim}
+toHouse :: NHouse -> House
+toHouse nh = let r = (map a ((filter ((==Running).st) (tot nh))))
+                 f = (map a ((filter ((==Finished).st) (tot nh))))
+             in House (r) (f)
+\end{verbatim}
+\begin{itemize}
+\item[-]{Análise do código:}
+\end{itemize}
+\paragraph{}Esta função tem como objetivo fazer o contrário da anterior. Esta, fazendo uma "triajem" aos estados de cada item facilmente os consegue separar para criar o $House$ pertendido. Para isso função cria duas variáveis $r$ e $f$ a primeira, vai a lista recebida, $nh$, que e um $tot$, e cria outra lista cujos os estados dos itens sejam $Running$, essa lista é depois usada no $map$ que recebe também o $a$ que, segundo a definição do $NAuction$, é o $Auction$.
+\begin{verbatim}
+      ... r = (map a ((filter ((==Running).st) (tot nh))))
+\end{verbatim}
+\paragraph{}A segunda variavel usa novamente o $map$ e o $filter$, mas desta vez, aplicado aos itens com o estado $Finished$, criando também uma lista desses mesmos itens. 
+\begin{verbatim}
+      ... f = (map a ((filter ((==Finished).st) (tot nh))))
+\end{verbatim}
+\paragraph{}Por ultimo, a função principal, a partir das listas $r$ e $f$ constroi o $House$:
+\begin{verbatim}
+      ... in House (r) (f)
+\end{verbatim}
+
+%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+\newpage
+%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+\item
+Redefinir o tipo $Auction$ acrescentando-lhe mais um campo --- $actclass$, 
+\begin{verbatim}
+data Auction =  Auction {
+                  actid     :: Int,
+                  actowner  :: String,
+                  actdesc   :: String,
+                  actclass  :: String,
+                  actvalue  :: Int,
+                  actbidder :: String
+                } deriving (Show,Eq,Ord) 
+\end{verbatim}
+que classifica itens em categorias (eg.\ electro-doméstico, mobiliário) e
+escrever uma nova função de administração que totaliza os valores leiloados
+por categoria ($x$ de electro-domésticos, $y$ de mobiliário, etc).
+
+\begin{itemize}
+\item {Tipo de dados:}
+\begin{verbatim}
+      tClass :: House -> [TotClass]
+\end{verbatim}
+\end{itemize}
+\paragraph{}Recebendo um $House$ devolve uma lista de $TotClass$. Mas o que é um $TotClass$?
+\begin{verbatim}
+data TotClass = TotClass {classe :: String, valor :: Int} 
+                                                deriving Show
+\end{verbatim}
+\paragraph{}Definimos um $TotClass$ sendo composto por $classe$ e por $valor$, este que totaliza os valores dos itens leiloados de uma determinada $classe$.
+\begin{itemize}
+\item {Código Haskell:}
+\end{itemize}
+\begin{verbatim}
+tClass :: House -> [TotClass]
+tClass h = let l = hrunning h ++ hfinished h	
+               q = nub(map actclass (l))
+           in lista l q
+
+lista :: [Auction] -> [String]-> [TotClass]
+lista l [] = [] 
+lista l (h:t) = let a = filter((==h).actclass)l
+                    b = map (actvalue) (a)
+		in TotClass (h) (foldr (+) 0 b):(lista l t)
+
+data TotClass = TotClass {classe :: String, valor :: Int} 
+                                                deriving Show
+\end{verbatim}
+\begin{itemize}
+\item{Análise do código:}
+\end{itemize}
+\paragraph{}A função principal começa como muitas outras por criar duas variaveis, a primeira $l$, como já tinhamos visto anteriormente cria uma lista com os artigos que estão no $hrunning$ $h$, e os que estão no $hfinished$ $h$. A segunda, $q$, usando o $map$ para que, indo aos $actclass$ dos itens lista $l$ crie uma lista com todas as classes existentes na lista $l$. Em seguida a função $nub$ ao receber essa lista e elimina, caso exista, todas as classes repetidas.
+\begin{verbatim}
+      ... q = nub(map actclass (l))
+\end{verbatim}
+\newpage
+\paragraph{}De seguida chama a função auxiliar $lista$. Esta função é que faz o trabalho principal, tendo também duas variaveis, a primeira, desta vez $a$, usando o $filter$ cria um lista que recorrendo á lista recebida, $l$, vai pegar os item com a classe igual as classes recebidas na lista.
+\begin{verbatim}
+      ... a = filter((==h).actclass)l
+\end{verbatim}
+\paragraph{}A segunda variavel, $b$, usando o $map$, pega na lista $a$ e de cada item vai buscar o seu valor, $actvalue$.
+\begin{verbatim}
+      ... b = map (actvalue) (a)
+\end{verbatim}
+\paragraph{}Por ultimo a função $lista$, para construir o $TotClass$, interpreta o $h$ como sendo a classe e usando uma função existente em Haskell, $foldr$\footnote{foldr :: $(a -> b -> b) -> b -> [a] -> b$}, que recebendo a instrução de soma, o caso de paragem, neste caso o elemento neutro da soma, e a lista vinda de $b$, soma todos os valores dos artigos com classes que estejam na lista recebida, calculando com o uso a recursivamente. Formando assim um $TotClass$ para cada classe.
+\begin{verbatim}
+       ... in TotClass (h) (foldr (+) 0 b):(lista l t)
+
+\end{verbatim}
+
+%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+\item	Um dos defeitos do modelo de dados $Auction$ é não guardar o valor
+        inicial de licitação. Corrijir esta limitação, criando ainda uma
+        função que contabilize quanto é que, em média, os itens vendidos
+        se valorizaram no leilão.
+\begin{itemize}
+\item {Tipo de dados:}
+\begin{verbatim}
+      media :: House -> (Float, String)
+\end{verbatim}
+\end{itemize}
+\paragraph{}Para esta função acrescentamos ao tipo $Auction$ outro campo "actvalinc", que guarda o valor inicial. O resultado desta função é, como diz no timo, $(Float, String)$, sendo o $(Float)$ a diferença média dos artigos, e consuante esse valor, exprime na $String$ de valurizou ou não valurizou.
+\begin{itemize}
+\item{Código Halkell:}
+\end{itemize}
+\begin{verbatim}
+media :: House -> (Float, String)
+media h = let l = hfinished h
+              a = map actvalinc l
+              b = map actvalue l
+          in auxMedia (zip a b)
+
+auxMedia :: (Fractional t, Integral a, Ord t)=>[(a, a)]->(t, String)
+auxMedia x = let a = map (\(m,n) -> n-m)x
+                 b = fromIntegral (sum a)
+                 c = fromIntegral (length a)
+                 d = b/c
+             in if (d>0) then (d,"Valorizou") 
+                              else (d,"Nao valorizou") 
+\end{verbatim}
+\newpage
+\begin{itemize}
+\item{Análise do Código:}
+\end{itemize}
+\paragraph{}A função principal, cria três listas como variáveis, $l$ que como os itens vendidos, a lista $l$ só utiliza o $hfinished$ $h$. A segunda, $a$, e a treceira ,$b$, são semelhantes, mas a primeira cria uma lista dos valores iniciais, $actvalinc$, enquanto a segunda cria dos valores a que os produtos foram vendidos, $actvalue$. Chando de seguida a função auxiliar $auxMedia$, que atravez da função $zip$\footnote{$zip :: [a] -> [b] -> [(a,b)]$} recebe uma lista de pares, com o valor inicial, e o valor final.  
+\paragraph{}A função auxiliar,
+\begin{verbatim}
+auxMedia :: (Fractional t, Integral a, Ord t)=>[(a, a)]->(t, String)
+auxMedia x = let a = map (\(m,n) -> n-m)x
+                 b = fromIntegral (sum a)
+                 c = fromIntegral (length a)
+                 d = b/c
+             in if (d>0) then (d,"Valorizou") 
+                              else (d,"Nao valorizou") 
+\end{verbatim}
+tem como objetivo tratar das operações. Esta atravéz do $let$ faz grande parte do trabalho, a variável $a$ resulta de aplicar o $map$ com uma função anónima, que pegando na lista que a função recebe como argumento, faz a subtração do valor final pelo valor inicial. Nas duas seguintes, $b$ e $c$, a primeira faz o sumatório dos valores resultantes de $a$, e a segunda calcula o comprimento da lista $a$. A utilização do $fromIntegral$ é para mais tarde poder utilizar a barra de divisão. A última, $d$, apenas faz a operação de subtração.
+\paragraph{}Por último a função faz uma pequena verificação, se o valor da média for maior que zero, significa que o produto valorizou, caso contrário não valorizou.
+\begin{verbatim}
+   ... in if (d>0) then (d,"Valorizou") else (d,"Nao valorizou")
+\end{verbatim} 
+\end{enumerate}
+\end{document}

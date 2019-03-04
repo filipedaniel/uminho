@@ -1,0 +1,422 @@
+\documentclass[a4paper]{article}
+\usepackage{a4}
+\usepackage{moreverb}
+\usepackage{palatino}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage[T1]{fontenc}
+\usepackage[portuges]{babel}
+
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\graphicspath{{./imagens/}}
+\usepackage{verbatim}
+%----------------------------------------------------------------------------
+\title{Relatório do Projecto Prático de Programação Orientada aos Objectos (2013/2014)}
+
+\author{
+\\
+	Grupo 50:
+	\\	
+	64315 - Filipe Ribeiro
+	\\
+	64361 - Pedro Matos
+	\\
+	64288 - Nelson Gomes
+\\
+}
+
+\date{Jun.\ 2014}
+
+%------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle
+
+\begin{figure}[ht]
+        \centering
+        \begin{subfigure}[b]{0.3\textwidth}
+                \includegraphics[width=0.8\textwidth]{1.jpeg}
+                \caption{Filipe Ribeiro}
+                \label{fig:1.jpeg}
+        \end{subfigure}
+       ~
+        \begin{subfigure}[b]{0.32\textwidth}
+                \includegraphics[width=0.8\textwidth]{2.jpeg}
+                \caption{Pedro Matos}
+                \label{fig:2.jpeg}
+        \end{subfigure}
+        ~ 
+        \begin{subfigure}[b]{0.32\textwidth}
+                \includegraphics[width=0.8\textwidth]{3.jpeg}
+                \caption{Nelson Gomes}
+                \label{fig:3.jpeg}
+        \end{subfigure}
+        \caption{Grupo 50}
+\end{figure}
+
+%------------------------------------------------------------------
+\pagebreak
+
+\begin{abstract}
+O projecto da unidade curricular Programação Orientada aos Objectos consiste no desenvolvimento de uma aplicação que permita registar e simular actividades desportivas chamada FitnessUM. O processo de implementação do mesmo encontra-se devidamente detalhado neste relatório.
+\end{abstract}
+
+\pagebreak
+
+\tableofcontents
+
+\pagebreak
+
+\listoffigures
+\pagebreak
+
+\section{Introdução}
+\paragraph{}O tema deste projecto era o desenvolvimento de uma aplicação de simulação de actividades desportivas. De forma a conseguir isso o grupo recorreu ao ambiente de desenvolvimento BlueJ. Este relatório descreve detalhadamente como se encontra organizado esta mesma aplicação, para isso encontra-se dividido em seis fases descrevendo cada uma delas uma etapa do projecto. 
+\\\\
+A primeira fase do projecto consiste na implementação e organização das actividades desportivas, de modo a ser fácil a expansão das mesmas futuramente.
+\\\\
+ A segunda fase descreve a implementação da classe \textit{Amigo} e sua organização, sendo esta futuramente utilizada pela classe \textit{Utilizador} .
+\\\\
+A terceira fase descreve a classe mais importante, a classe \textit{Utilizador}, esta utilizando as duas classes criadas nas duas primeiras fases.
+\\\\
+ A quarta fase consiste em informação relacionada com estatística e  records de um dado utilizador.
+\\\\
+Na quinta fase encontrasse todos os menus de interface com o utilizador presentes nesta aplicação.
+\\\\
+Por ultimo, a sexta fase mostra as restantes classes criadas na realização desta aplicação que não foram abordadas anteriormente.
+
+\pagebreak
+
+\section{Diagrama Geral}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=1.0\textwidth]{geral.png}
+\caption{Diagrama geral da aplicação no BlueJ}
+\end{figure}
+
+
+
+
+\pagebreak
+%------------------------------------------------------------------
+
+\section{Actividades}
+\subsection{Organização das Actividades}
+
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=1.0\textwidth]{actividades.png}
+\caption{Organização das Actividades}
+\end{figure}
+
+
+Como mostra na figura 2, a classe \textit{Actividade} esta declarada com \textit{<abstract>} tendo como objectivo a reutilização do código através de herança. As actividades estão divididas em outras quatro classes, \textit{Outdoor} , \textit{Coletivas}, \textit{Aquatica} e \textit{Fitness} , também estas declaradas como classes abstractas pelo mesmo objectivo que a anterior. Cada uma destas subclasses têm actividades desportivas associadas, sendo que com este tipo de organização é possível inserir outras actividades facilmente devido mais uma vez à herança de classes. Nesta figura é possível ver também a classe \textit{Kilometragem} declarada como \textit{<Interface>} tendo como objectivo obrigar a implementação de um método que devolve o total de quilômetros nas actividades, neste caso, todas do tipo \textit{Outdoor}.  Existe também uma classe \textit{Actividades}, esta classe foi criada essencialmente para a organização de código, contendo um conjunto de actividades organizadas de uma certa forma.  Alem dessa existe mais duas classes \textit{ActividadeEnexException} e \textit{ActividadeExistException}, sendo cada uma delas exceções para funções implementadas na classe \textit{Actividades}.  
+
+\subsection{Estrutura Escolhida}
+
+\paragraph{}A estrutura escolhida para guardar a informação de cada actividade foi um \textit{HashMap}:
+\begin{verbatim}
+private HashMap<Integer,Actividade> l_actividades; 
+\end{verbatim}
+esta estrutura é declarada na classe \textit{Actividades}, escolhida pela eficiência, sendo a chave de inserção um identificador de cada actividade e como objecto a informação da actividade. Esta estrutura nesta situação é bastante eficiente devido ao facto de existir um identificador único para cada actividade. 
+
+\pagebreak
+
+%------------------------------------------------------------------
+
+\section{Amigos}
+\subsection{Organização de Amigos}
+\
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth]{amigo.png}
+\caption{Organização dos Amigos}
+\end{figure}
+
+Como mostra na figura existe a classe \textit{Amigo}, esta contendo a informação de cada amigo. Tal como a classe \textit{Actividades}, existe também uma classe \textit{Amigos} com o mesmo objectivo, contendo um conjunto de amigos.
+\paragraph{}Alem dessas existe mais duas classes \textit{AmigoEnexException} e \textit{AmigoExistException}, sendo cada uma delas exceções para funções implementadas na classe \textit{Amigos}. 
+
+\subsection{Estrutura Escolhida}
+
+\paragraph{} A estrutura escolhida para guarda a informação de cada amigo foi um \textit{ArrayList}:
+\begin{verbatim}
+private ArrayList<Amigo> lista;
+\end{verbatim}
+esta estrutura é declarada na classe \textit{Amigos}, sendo escolhida pela simplicidade, sendo o a classe \textit{Amigos} uma classe simples com apenas duas variáveis do tipo \textit{String}  uma estrutura simples é o ideal para usar. 
+
+\pagebreak
+
+%------------------------------------------------------------------
+\section{Utilizadores}
+\subsection{Organização de Utilizadores}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth]{utilizadores.png}
+\caption{Organização dos Utilizadores}
+\end{figure}
+
+Tal como na classe Amigos, como mostra na figura existe uma classe Utilizador, contendo a informação de casa utilizador, existe também uma classe \textit{Utilizadores} contendo um conjunto de utilizadores.
+\paragraph{}Mais uma vez, alem dessas existe mais duas classes \textit{UtilizadorEnexException} e \textit{UtilizadorExistException}, sendo também cada uma delas exceções para funções implementadas na classe \textit{Utilizadores}.
+
+
+\subsection{Estrutura Escolhida}
+
+\paragraph{} A estrutura escolhida esta na classe \textit{Utilizadores} sendo escolhida para guardar informação de cada utilizador tal como anteriormente foi um \textit{HashMap}:
+\begin{verbatim}
+private HashMap<String,Utilizador> users;
+\end{verbatim}
+esta estrutura foi escolhida pelo facto de só existir um e-mail distinto para cada utilizador, sendo assim esta estrutura baste eficaz.
+
+\pagebreak
+
+%------------------------------------------------------------------
+
+\section{Estatística / Records}
+	\subsection{Estatística}
+
+\paragraph{}O menu que lista as estatísticas será acedido a partir do menu principal, apresentado mais a frente. Ao lista as estatísticas será possível aceder a três opções:
+\begin{itemize}
+	\item Estatísticas gerais total;
+	\item Estatísticas gerais ultimo mês;
+	\item Estatísticas gerais Anual;
+\end{itemize}
+cada uma delas mostra a mesma quantidade de informação, a primeira opção tal como o nome indica, mostra as estatísticas de todas as actividades já praticadas, a segunda do último mês e a terceira opção, pedindo ao utilizador um ano, mostra a respectiva estatística desse mesmo ano. 
+\begin{itemize}
+	\item Cada uma das opções mostrará:
+	\begin{itemize}
+		\item Numero total de actividades praticadas;
+		\item Duração total despendidas em todas as actividades;
+		\item Total de Calorias queimadas em todas as actividades;
+		\item Total de quilômetros em todas as actividades (só contribui para este item as actividades que respondem a classe \textit{Kilometragem} já referido em anteriormente);
+	\end{itemize}
+\end{itemize}
+
+\subsection{Recordes}
+\paragraph{}O menu de recordes tal como o de estatística será acedido do menu principal. Este menu acaba por ser parecido com o de estatística, tratando-se apenas de uma lista de records simples. Ao listar será possível aceder a uma única opção:
+\begin{itemize}
+	\item Recordes Gerais
+	\begin{itemize}
+		\item Lista total de actividades praticadas;
+		\item Máxima duração numa actividade física;
+		\item Máximo de calorias queimas em uma só actividade; 
+	\end{itemize}
+\end{itemize}
+a opção apresenta três resultados relacionados as actividades realizadoras por um dado utilizador.
+
+
+\pagebreak
+
+%------------------------------------------------------------------
+
+\section{Organização de Menus}
+	\subsection{FitnessUM}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth]{fitnessum.png}
+\caption{Classe e Menu FitnessUM}
+\end{figure}
+
+Este menu é o primeiro da aplicação contendo quatro opções relevantes, a primeira para entrar na verdadeiramente na aplicação, a segunda para guardar a informação uma vez introduzida, para futuramente usar a terceira opção para voltar a carregar essa respectiva informação. Por último, tal como o nome indica a quarta opção sai da aplicação. 
+
+\subsection{Menu Principal}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.8\textwidth]{menuprincipal.png}
+\caption{Classe e Menu Principal}
+\end{figure}
+
+\begin{itemize}
+	\item Login
+\end{itemize}
+	Uma vez que um utilizador já se encontra no sistema, basta fazer login com o seu respectivo e-mail e password, para assim poder aceder as suas actividades.
+\pagebreak
+\begin{itemize}
+	\item Entrar
+\end{itemize}
+	Se o utilizador ainda não estiver registado no sistema, tem com esta opção a possibilidade de se registar, introduzindo os seus dados conforme lhe seja pedido pelo sistema.
+\begin{itemize}
+	\item Amin
+\end{itemize}
+	Esta é uma opção é relativamente igual a primeira, mas ao contrário da mesma, esta opção requer  dados de administração. Na figura 6 esta representada a classe \textit{Admin} , declarada com \textit{<Interface>} que contem declarados os dados de login de administração.
+\begin{itemize}
+	\item Sair
+\end{itemize}
+	Opção que permite voltar par o menu anterior.
+
+\subsection{Menu de Administração}
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.7\textwidth]{menuadmin.png}
+\caption{Classe e Menu Admin}
+\end{figure}
+
+\begin{itemize}
+	\item Total de Utilizadores
+\end{itemize}
+Esta opção simples mostra simplesmente o número total de utilizadores registados no sistema.
+\begin{itemize}
+	\item Listar
+\end{itemize}
+Opção que não faz mais do que listar toda a informação de cada um dos utilizadores registados.
+\begin{itemize}
+	\item Apagar
+\end{itemize}
+Como o nome indica, possibilita apagar um dado utilizador, introduzindo o seu e-mail.
+
+\begin{itemize}
+	\item Voltar
+\end{itemize}
+Opção para voltar ao menu anterior, menu principal.
+\pagebreak
+
+
+\subsection{Menu Utilizador}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth]{menuutilizador.png}
+\caption{Classe e Menu Utilizador}
+\end{figure}
+
+Este menu é o menu mais importante do sistema, aonde o utilizador pode consultar e alterar tudo que ele tem acesso, é também um menu intermediário aonde a partir do mesmo se acesa outros menus, todos eles apresentados mais tarde.
+\begin{itemize}
+	\item Consultar Actividades
+\end{itemize}
+	Este é um dos casos que ao escolher esta opção irá para outro menu mais detalhado - \textit{"MenuConsultaActividades"}.
+\begin{itemize}
+	\item Adicionar Actividade
+\end{itemize}
+	A semelhança da opção anterior, este também redireciona para outro menu - \textit{"MenuNovaActividade"}.
+\pagebreak
+\begin{itemize}
+	\item Consultar Amigos
+\end{itemize}
+	Mais uma das opção de redirecionamento desta vez para o menu - \textit{MenuConsultaAmigos}.
+
+\begin{itemize}
+	\item Adicionar Amigo
+\end{itemize}
+	Esta opção ao contrário das três anteriores não chama outro menu, pedindo ela mesmo ao utilizador o e-mail e nome ou \textit{nickname} do utilizador que quer adicionar como amigo. É de salientar que se o utilizador quiser inserir um outro utilizador que não esta registado no sistema ou que já se encontra na lista de amigos surgirá uma exceção para cada um dos casos.
+ 
+\begin{itemize}
+	\item Remover Amigo
+\end{itemize}
+	Esta opção semelhante à anterior, pedindo ao utilizador o e-mail do utilizador que quer remover da lista de amigos. Também neste caso é de salientar que se o utilizador quiser remover um outro utilizador que não esta registado na sua lista de amigos surgirá uma excepção para esse caso.
+
+\begin{itemize}
+	\item Consultar Estatísticas
+\end{itemize}
+	Sendo esta opção já abordada anteriormente, mas é mais uma das que redireciona para outro menu - \textit{MenuConsultaEstatisticas}
+
+
+\begin{itemize}
+	\item Consultar Records 
+\end{itemize}
+	Tal como a opção anterior, opção já abordada anteriormente, sendo também esta mais uma das que redireciona para outro menu - \textit{MenuConsultaRecordes}
+
+\begin{itemize}
+	\item Alterar dados pessoais
+\end{itemize}
+Esta opção consiste na possibilidade de alterar alguns dos dados do utilizador como, password, desporto favorito, altura e peso. Sendo cada informação pedida ao utilizador.
+
+\begin{itemize}
+	\item Sair
+\end{itemize}
+	Opção que permite sair deste menu, voltando para o menu anterior.
+
+\pagebreak
+
+\subsection{Menu Consulta Actividades}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth]{consultaactiv.png}
+\caption{Classe e Menu Consulta Actividade}
+\end{figure}
+
+Estas opções são todas relativamente parecidas, servindo todas para consultas de actividades, todas, ultimas dez, possibilidade de consultar por tipo de actividade ou pelo nome especifico da mesma são o tipo de consultas que aqui é mostrado.
+
+\subsection{Menu Nova Actividade}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.55\textwidth]{novaactiv.png}
+\caption{Classe e Menu Nova Actividade}
+\end{figure}
+
+\pagebreak
+
+Menu com a possibilidade de adicionar novas actividades das que existem na aplicação, ao escolher alguma delas, será pedido informação ao utilizador correspondente à actividade selecionada.
+
+\subsection{Menu Consulta Amigos}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.7\textwidth]{consamig.png}
+\caption{Classe e Menu Consulta Amigos}
+\end{figure}
+
+Menu que lista tudo sobre os amigos adicionados na lista de amigos do utilizador, mostrar todos, consultar todas ou as ultimas 10 actividades, estatísticas e recordes dado o e-mail do amigo a querer saber são as opções de consulta presentes neste menu.
+
+
+\subsection{Menu Consulta Estatística}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth]{consest.png}
+\caption{Classe e Menu Consulta Estatísticas}
+\end{figure}
+Este menu já foi referido anteriormente, senso responsável por mostrar a estatística de em dado utilizador. Estatísticas gerais, relacionadas com todas as actividades, do ultimo mês, ou também a possibilidade de consultar as estatísticas de um dado ano, pedido ao utilizador.
+
+
+
+\pagebreak
+
+
+\subsection{Menu Consulta Recordes}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth]{consrec.png}
+\caption{Classe e Menu Consulta Recordes}
+\end{figure}
+Este menu tal como o anterior já foi referido anteriormente, sendo responsável por mostrar básicos recordes do  utilizador. Total de actividades praticadas, máxima duração numa única actividade e máximo de calorias queimadas numa só actividade são a informação que a opção deste menu mostra.
+
+
+\section{Outras Classes}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth]{outras.png}
+\caption{Classes de teste}
+\end{figure}
+
+Classes ainda não referidas anteriormente mas indispensáveis na realização deste projecto, classes de teste, para um utilizador, e um conjunto deles, mas também para um conjunto de actividades bem como de amigos.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.3\textwidth]{data.png}
+\caption{Classe Data}
+\end{figure}
+A criação desta classe surgiu com o aparecimento de dificuldades que o grupo teve com a classe \textit{Gregorian Calendar} já pertencente ao java, tendo esta classe como objectivo, de alguma modo substituir essa mesma classe.
+
+
+\pagebreak
+
+\section{Conclusão}
+
+\paragraph{}Numa primeira abordagem ao projecto tentamos definir classes genéricas para a implementação de actividades físicas, acabando por perceber que não era o mais correcto, a partir dai durante todo o resto do  desenvolvimento do trabalho, as nossas principais preocupações foram de definir as variáveis de instância como sendo o mais genérico possível possibilitando um maior leque de possibilidades na definição dos vários métodos e definir classes abstractas que no futuro permitissem implementar/acrescentar novas actividades facilmente, sem ser necessário a redefinição do código existente.
+\paragraph{}É de salientar que além das estruturas de dados apresentadas neste relatório, foram usadas também \textit{TreeMap} e \textit{TreeSet} essencialmente para métodos de ordenação, permitindo logo à partida, por comparadores definidos nas classes, que é o caso das classes \textit{Actividade} e \textit{Data}, mas também, estando já definido, o comparador de \textit{Strings} uma ordenação na inserção. 
+
+\pagebreak
+\end{document}

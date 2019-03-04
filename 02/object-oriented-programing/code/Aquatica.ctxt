@@ -1,0 +1,20 @@
+#BlueJ class context
+comment0.params=
+comment0.target=Aquatica()
+comment0.text=\n\ Construtor\ vazio\n
+comment1.params=id\ dat\ dur
+comment1.target=Aquatica(int,\ Data,\ double)
+comment1.text=\n\ Construtor\ parametrizado\n
+comment2.params=p
+comment2.target=Aquatica(Aquatica)
+comment2.text=\n\ Construtor\ por\ c\u00E1pia\n
+comment3.params=
+comment3.target=double\ calorias()
+comment3.text=\n\ Devolve\ as\ calorias\ queimadas\ de\ cada\ actividade\ do\ tipo\ Aquatica\n
+comment4.params=o
+comment4.target=boolean\ equals(java.lang.Object)
+comment5.params=
+comment5.target=Aquatica\ clone()
+comment6.params=
+comment6.target=java.lang.String\ toString()
+numComments=7
